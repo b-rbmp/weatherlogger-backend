@@ -1,8 +1,9 @@
 import decimal
 from typing import Dict, List, Optional
 from sqlalchemy.orm import Session
-from sqlalchemy import and_
-from datetime import date, datetime
+from sqlalchemy import and_, tuple_
+from sqlalchemy import func, distinct
+from datetime import date, datetime, timedelta
 
 
 from backend.src.app import models, schemas
@@ -11,7 +12,7 @@ from backend.src.app.db.db import engine
 class CRUDWeatherStation:
 
     @staticmethod
-    def get_by_id(db: Session, id: int):
+    def get_by_id(db: Session, id: int) -> models.WeatherStation | None:
         return db.query(models.WeatherStation).filter(models.WeatherStation.id == id).first()
 
     @staticmethod
@@ -84,6 +85,28 @@ class CRUDWeatherStation:
         db.commit()
         return True
 
+    @staticmethod
+    def count_all(db: Session) -> int:
+        return db.query(distinct(models.WeatherStation.id)).count()
+
+    @staticmethod
+    def count_connected(db: Session, number_of_hours: int) -> int:
+        time_now = datetime.now()
+        time_start = time_now - timedelta(hours=number_of_hours)
+        num_estacoes_conectadas = db.query(models.WeatherRecord).filter(models.WeatherRecord.date >= time_start).distinct(models.WeatherRecord.weather_station_id).count()
+
+        return num_estacoes_conectadas
+
+    @staticmethod
+    def count_connected_daily(db: Session, number_of_days: int) -> List[schemas.EvolucaoConectividadeData]:
+        time_now = datetime.now()
+        time_start = time_now - timedelta(days=number_of_days)
+        query = db.query(func.date(models.WeatherRecord.date), func.count(distinct(tuple_(models.WeatherRecord.weather_station_id, models.WeatherRecord.date)))).filter(models.WeatherRecord.date >= time_start).group_by(func.date(models.WeatherRecord.date))
+
+        response = query.all()
+
+        return response
+
 class CRUDWeatherRecord:
 
     @staticmethod
@@ -130,6 +153,8 @@ class CRUDWeatherRecord:
 
         response_get["total-count"] = str(query_result.count())
 
+        query_result = query_result.order_by(models.WeatherRecord.date.desc())
+
         if skip is not None and limit is not None:
             query_result = query_result.offset(skip).limit(limit)
         
@@ -156,3 +181,12 @@ class CRUDWeatherRecord:
         db.delete(db_item)
         db.commit()
         return True
+
+    @staticmethod
+    def count_all(db: Session) -> int:
+        return db.query(distinct(tuple_(models.WeatherRecord.weather_station_id, models.WeatherRecord.date))).count()
+
+    @staticmethod
+    def get_last_record(db: Session) -> models.WeatherRecord:
+
+        return db.query(models.WeatherRecord).order_by(models.WeatherRecord.date.desc()).first()

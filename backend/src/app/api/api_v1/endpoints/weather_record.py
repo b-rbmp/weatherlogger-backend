@@ -44,7 +44,11 @@ def create_weatherrecord(
     db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weatherrecord.weather_station_id)
     if db_weather_station is None:
         raise HTTPException(status_code=404, detail="Weather Station não encontrado")
-    
+
+    db_weather_record_exists = CRUDWeatherRecord.get_by_weather_station_id_and_date(db=db, weather_station_id=weatherrecord.weather_station_id, date=weatherrecord.date)
+    if db_weather_record_exists is not None:
+        raise HTTPException(status_code=409, detail="Weather Record com mesma data e estação já encontrado")
+  
     weatherrecord_out = schemas.WeatherRecordCreateOut(**weatherrecord.copy().dict(), weather_station=db_weather_station)
     return CRUDWeatherRecord.create(db=db, item=weatherrecord_out)
 
@@ -70,11 +74,18 @@ def update_weatherrecord(
 
     if db_weatherrecord is None:
         raise HTTPException(status_code=404, detail="WeatherRecord não encontrado")
-    db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weatherrecord.weather_station_id)
-    if db_weather_station is None:
-        raise HTTPException(status_code=404, detail="WeatherStation não encontrado")
-    
+    db_weather_station = None
+    if weatherrecord.weather_station_id is not None:
+        db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weatherrecord.weather_station_id)
+        if db_weather_station is None:
+            raise HTTPException(status_code=404, detail="WeatherStation não encontrado")
+    else:
+        db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weather_station_id)
+        if db_weather_station is None:
+            raise HTTPException(status_code=404, detail="WeatherStation não encontrado")
     weatherrecord_out = schemas.WeatherRecordUpdateOut(**weatherrecord.copy().dict(), weather_station=db_weather_station)
+
+
     return CRUDWeatherRecord.update(db=db, item=weatherrecord_out, db_item=db_weatherrecord)
 
 
