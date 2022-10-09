@@ -16,6 +16,11 @@ class CRUDWeatherStation:
         return db.query(models.WeatherStation).filter(models.WeatherStation.id == id).first()
 
     @staticmethod
+    def get_by_api_key(db: Session, api_key: str) -> models.WeatherStation | None:
+        return db.query(models.WeatherStation).filter(models.WeatherStation.api_key == api_key).first()
+
+
+    @staticmethod
     def create(db: Session, item: schemas.WeatherStationCreateOut):
 
         db_item = models.WeatherStation()

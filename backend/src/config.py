@@ -41,6 +41,12 @@ class SettingsDev(SettingsBase):
     DB_NAME: str = os.getenv("DB_DEV_NAME")
     DB_SCHEMA: str = os.getenv("DB_DEV_SCHEMA")
 
+    MQTT_USER: str = os.getenv("MQTT_USER_DEV")
+    MQTT_PASS: str = os.getenv("MQTT_PASS_DEV")
+    MQTT_HOST: str = os.getenv("MQTT_HOST_DEV")
+    MQTT_SSL: bool = os.getenv("MQTT_SSL_DEV")
+    MQTT_PORT: int = os.getenv("MQTT_PORT_DEV")
+
 
 
 # Configurações Ambiente de Produção - Definidos todos no .env ou sobrepostos por variáveis de ambiente
@@ -53,6 +59,12 @@ class SettingsProd(SettingsBase):
     DB_HOST: str = os.getenv("DB_PROD_HOST")
     DB_NAME: str = os.getenv("DB_PROD_NAME")
     DB_SCHEMA: str = os.getenv("DB_PROD_SCHEMA")
+
+    MQTT_USER: str = os.getenv("MQTT_USER_PROD")
+    MQTT_PASS: str = os.getenv("MQTT_PASS_PROD")
+    MQTT_HOST: str = os.getenv("MQTT_HOST_PROD")
+    MQTT_SSL: bool = os.getenv("MQTT_SSL_PROD")
+    MQTT_PORT: int = os.getenv("MQTT_PORT_PROD")
 
 
 # Seleciona as configurações baseados no modo de funcionamento (production ou development)
