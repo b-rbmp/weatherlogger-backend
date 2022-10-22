@@ -1,10 +1,10 @@
 
 from datetime import datetime, date
 from decimal import Decimal
-from typing import List, Optional
+from typing import List, Optional, Union
 from pydantic.main import BaseModel
 
-from backend.src.app import models
+from app import models
 
 
 
@@ -98,7 +98,7 @@ class GlobalData(HashableBaseModel):
 	numero_amostras: int
 	ultima_amostra: str
 	stations: List[WeatherStationInDBBase]
-	preview_station: PreviewStation | str
+	preview_station: Union[PreviewStation,str]
 	evolucao_conectividade: List[EvolucaoConectividadeData]
 
 	class Config:

@@ -6,10 +6,10 @@ import time
 import paho.mqtt.client as paho
 from paho import mqtt
 from sqlalchemy.orm import Session
-from backend.src.app import schemas
-from backend.src.app.db.db_manager import CRUDWeatherRecord, CRUDWeatherStation
-from backend.src.app.dependencies import get_db_standalone
-from backend.src.config import settings
+from app import schemas
+from app.db.db_manager import CRUDWeatherRecord, CRUDWeatherStation
+from app.dependencies import get_db_standalone
+from config import settings
 
 # setting callbacks for different events to see if it works, print the message etc.
 def on_connect(client, userdata, flags, rc, properties=None):

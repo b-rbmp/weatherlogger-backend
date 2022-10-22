@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from backend.src.config import settings
+from config import settings
 
 # Criação da conexão com o Banco de Dados, pega uma sessão para realizar as ações
 

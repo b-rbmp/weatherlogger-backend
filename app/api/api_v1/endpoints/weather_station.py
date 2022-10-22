@@ -5,10 +5,10 @@ from fastapi import Query, HTTPException, APIRouter, Response
 
 from sqlalchemy.orm import Session
 
-from backend.src.app.dependencies import get_db
+from app.dependencies import get_db
 
-from backend.src.app.db.db_manager import CRUDWeatherStation
-from backend.src.app import models, schemas
+from app.db.db_manager import CRUDWeatherStation
+from app import models, schemas
 
 # Definição dos Caminhos da API
 

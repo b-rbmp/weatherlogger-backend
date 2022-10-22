@@ -3,9 +3,9 @@ from starlette.middleware.cors import CORSMiddleware
 
 
 #from .dependencies import get_query_token
-from .app.api.api_v1.api import api_router
-from backend.src.config import settings
-from backend.src.app.core import mqtt
+from app.api.api_v1.api import api_router
+from config import settings
+from app.core import mqtt
 
 # Inicialização do API com as suas configurações
 app = FastAPI(title=settings.PROJECT_NAME, description=settings.DESCRIPTION, version=settings.VERSION, openapi_url=f"{settings.API_V1_STR}/openapi.json", docs_url=f"{settings.API_V1_STR}/docs", redoc_url=f"{settings.API_V1_STR}/redoc")

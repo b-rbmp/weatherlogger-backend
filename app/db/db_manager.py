@@ -1,22 +1,22 @@
 import decimal
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, tuple_
 from sqlalchemy import func, distinct
 from datetime import date, datetime, timedelta
 
 
-from backend.src.app import models, schemas
-from backend.src.app.db.db import engine
+from app import models, schemas
+from app.db.db import engine
 
 class CRUDWeatherStation:
 
     @staticmethod
-    def get_by_id(db: Session, id: int) -> models.WeatherStation | None:
+    def get_by_id(db: Session, id: int) -> Union[models.WeatherStation, None]:
         return db.query(models.WeatherStation).filter(models.WeatherStation.id == id).first()
 
     @staticmethod
-    def get_by_api_key(db: Session, api_key: str) -> models.WeatherStation | None:
+    def get_by_api_key(db: Session, api_key: str) -> Union[models.WeatherStation, None]:
         return db.query(models.WeatherStation).filter(models.WeatherStation.api_key == api_key).first()
 
 

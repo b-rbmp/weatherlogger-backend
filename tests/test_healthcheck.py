@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 
-from backend.src.main import app
-from backend.src.config import settings
-from backend.src.app.dependencies import has_permissions, override_has_permissions_dev
+from main import app
+from config import settings
+from app.dependencies import has_permissions, override_has_permissions_dev
 
 # Cria o cliente de teste
 client = TestClient(app)
