@@ -106,7 +106,7 @@ class CRUDWeatherStation:
     def count_connected_daily(db: Session, number_of_days: int) -> List[schemas.EvolucaoConectividadeData]:
         time_now = datetime.now()
         time_start = time_now - timedelta(days=number_of_days)
-        query = db.query(func.date(models.WeatherRecord.date), func.count(distinct(tuple_(models.WeatherRecord.weather_station_id, models.WeatherRecord.date)))).filter(models.WeatherRecord.date >= time_start).group_by(func.date(models.WeatherRecord.date))
+        query = db.query(func.date(models.WeatherRecord.date), func.count(distinct(models.WeatherRecord.weather_station_id))).filter(models.WeatherRecord.date >= time_start).group_by(func.date(models.WeatherRecord.date))
 
         response = query.all()
 

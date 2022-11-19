@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import List, Optional, Tuple
 
 from fastapi.params import Depends
@@ -44,6 +44,23 @@ def get_global_data(
     evolucao_conectividade: List[schemas.EvolucaoConectividadeData] = []
     for evolucao_conectividade_item in evolucao_conectividade_list:
         evolucao_conectividade.append(schemas.EvolucaoConectividadeData(date=evolucao_conectividade_item[0], connected=evolucao_conectividade_item[1]))
+    
+    edate = datetime.now().date()
+    sdate = (datetime.now()-timedelta(days=numero_dias_conectividade)).date()
+    dates_1_week = [sdate+timedelta(days=x+1) for x in range((edate-sdate).days)]
+
+    for data in dates_1_week:
+        has_item = False
+        for evolucao_conectividade_item in evolucao_conectividade:
+            if evolucao_conectividade_item.date == data:
+                has_item = True
+                break
+        if not has_item:
+            evolucao_conectividade.append(schemas.EvolucaoConectividadeData(date=data, connected=0))
+    
+    def find_date(elem: schemas.EvolucaoConectividadeData):
+        return elem.date
+    evolucao_conectividade.sort(key=find_date, reverse=False)
     global_data = schemas.GlobalData(estacoes_registradas=estacoes_registradas, estacoes_conectadas=estacoes_conectadas, numero_amostras=numero_amostras, ultima_amostra=ultima_amostra, stations=stations, preview_station=preview_station, evolucao_conectividade=evolucao_conectividade)
 
     return global_data
