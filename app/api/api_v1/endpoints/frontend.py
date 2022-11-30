@@ -1,5 +1,6 @@
 from datetime import date, datetime, timedelta
 from typing import List, Optional, Tuple
+from decimal import Decimal
 
 from fastapi.params import Depends
 from fastapi import Query, HTTPException, APIRouter, Response
@@ -78,8 +79,10 @@ def get_estacao_data(
     weather_records: List[models.WeatherRecord] = CRUDWeatherRecord.get_list(db=db, skip=0, limit=100000, weather_station_id=weather_station_db.id)["elements"]
     if len(weather_records) == 0:
         raise HTTPException(status_code=404, detail="WeatherStation sem medições")
-
-    weather_records_out = [schemas.EstacaoRecordData(**schemas.WeatherRecordInDBBase.from_orm(weather_record).copy().dict()) for weather_record in weather_records]
+    weather_records_out: List[schemas.EstacaoRecordData] = []
+    for weather_record in weather_records:
+        if not Decimal.is_nan(weather_record.dewpoint) and not Decimal.is_nan(weather_record.temperature) and not Decimal.is_nan(weather_record.humidity) and not Decimal.is_nan(weather_record.heat_index) and not Decimal.is_nan(weather_record.pressure) and not Decimal.is_nan(weather_record.dioxide_carbon_ppm):
+            weather_records_out.append(schemas.EstacaoRecordData(**schemas.WeatherRecordInDBBase.from_orm(weather_record).copy().dict()))
     last_record_date = weather_records[0].date
     first_record_date = weather_records[-1].date
 
