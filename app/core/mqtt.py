@@ -67,9 +67,12 @@ def on_message(client, userdata, msg):
                 db_weather_record_exists = CRUDWeatherRecord.get_by_weather_station_id_and_date(db=db, weather_station_id=db_weather_station.id, date=date)
                 if db_weather_record_exists is not None:
                     print("Weather Record com mesma data e estação já encontrado")
-            
-                weatherrecord_out = schemas.WeatherRecordCreateOut(weather_station_id=db_weather_station.id, weather_station=db_weather_station, date=date, temperature=temperature, heat_index=heat_index, dewpoint=dewpoint, humidity=humidity, pressure=pressure, dioxide_carbon_ppm=dioxide_carbon_ppm, rain_presence=rain_presence)
-                CRUDWeatherRecord.create(db=db, item=weatherrecord_out)
+
+                if Decimal.is_nan(temperature) or Decimal.is_nan(heat_index) or Decimal.is_nan(dewpoint) or Decimal.is_nan(humidity) or Decimal.is_nan(pressure) or Decimal.is_nan(dioxide_carbon_ppm):
+                    print("Weather Record com valores inválidos")
+                else:
+                    weatherrecord_out = schemas.WeatherRecordCreateOut(weather_station_id=db_weather_station.id, weather_station=db_weather_station, date=date, temperature=temperature, heat_index=heat_index, dewpoint=dewpoint, humidity=humidity, pressure=pressure, dioxide_carbon_ppm=dioxide_carbon_ppm, rain_presence=rain_presence)
+                    CRUDWeatherRecord.create(db=db, item=weatherrecord_out)
             except Exception as e:
                 print("Error: " + e)
             finally:
