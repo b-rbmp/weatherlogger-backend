@@ -41,16 +41,17 @@ def create_weatherrecord(
     weatherrecord: schemas.WeatherRecordCreateIn,
     db: Session = Depends(get_db),
 ):
-    db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weatherrecord.weather_station_id)
-    if db_weather_station is None:
-        raise HTTPException(status_code=404, detail="Weather Station não encontrado")
+    # db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weatherrecord.weather_station_id)
+    # if db_weather_station is None:
+    #     raise HTTPException(status_code=404, detail="Weather Station não encontrado")
 
-    db_weather_record_exists = CRUDWeatherRecord.get_by_weather_station_id_and_date(db=db, weather_station_id=weatherrecord.weather_station_id, date=weatherrecord.date)
-    if db_weather_record_exists is not None:
-        raise HTTPException(status_code=409, detail="Weather Record com mesma data e estação já encontrado")
+    # db_weather_record_exists = CRUDWeatherRecord.get_by_weather_station_id_and_date(db=db, weather_station_id=weatherrecord.weather_station_id, date=weatherrecord.date)
+    # if db_weather_record_exists is not None:
+    #     raise HTTPException(status_code=409, detail="Weather Record com mesma data e estação já encontrado")
   
-    weatherrecord_out = schemas.WeatherRecordCreateOut(**weatherrecord.copy().dict(), weather_station=db_weather_station)
-    return CRUDWeatherRecord.create(db=db, item=weatherrecord_out)
+    # weatherrecord_out = schemas.WeatherRecordCreateOut(**weatherrecord.copy().dict(), weather_station=db_weather_station)
+    # return CRUDWeatherRecord.create(db=db, item=weatherrecord_out)
+    return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not logged in")
 
 @router.get("/weatherrecord/{weather_station_id}&{date}", tags=["weatherrecord"], response_model=schemas.WeatherRecordInDBBase)
 def get_weatherrecord_id(
@@ -70,23 +71,24 @@ def update_weatherrecord(
     weatherrecord: schemas.WeatherRecordUpdateIn,
     db: Session = Depends(get_db),
 ):
-    db_weatherrecord = CRUDWeatherRecord.get_by_weather_station_id_and_date(db=db, weather_station_id=weather_station_id, date=date)
+    # db_weatherrecord = CRUDWeatherRecord.get_by_weather_station_id_and_date(db=db, weather_station_id=weather_station_id, date=date)
 
-    if db_weatherrecord is None:
-        raise HTTPException(status_code=404, detail="WeatherRecord não encontrado")
-    db_weather_station = None
-    if weatherrecord.weather_station_id is not None:
-        db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weatherrecord.weather_station_id)
-        if db_weather_station is None:
-            raise HTTPException(status_code=404, detail="WeatherStation não encontrado")
-    else:
-        db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weather_station_id)
-        if db_weather_station is None:
-            raise HTTPException(status_code=404, detail="WeatherStation não encontrado")
-    weatherrecord_out = schemas.WeatherRecordUpdateOut(**weatherrecord.copy().dict(), weather_station=db_weather_station)
+    # if db_weatherrecord is None:
+    #     raise HTTPException(status_code=404, detail="WeatherRecord não encontrado")
+    # db_weather_station = None
+    # if weatherrecord.weather_station_id is not None:
+    #     db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weatherrecord.weather_station_id)
+    #     if db_weather_station is None:
+    #         raise HTTPException(status_code=404, detail="WeatherStation não encontrado")
+    # else:
+    #     db_weather_station = CRUDWeatherStation.get_by_id(db=db, id=weather_station_id)
+    #     if db_weather_station is None:
+    #         raise HTTPException(status_code=404, detail="WeatherStation não encontrado")
+    # weatherrecord_out = schemas.WeatherRecordUpdateOut(**weatherrecord.copy().dict(), weather_station=db_weather_station)
 
 
-    return CRUDWeatherRecord.update(db=db, item=weatherrecord_out, db_item=db_weatherrecord)
+    # return CRUDWeatherRecord.update(db=db, item=weatherrecord_out, db_item=db_weatherrecord)
+    return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not logged in")
 
 
 @router.delete("/weatherrecord/{weather_station_id}&{date}", tags=["weatherrecord"], response_model=bool)
@@ -95,7 +97,9 @@ def delete(
     date: datetime,
     db: Session = Depends(get_db),
 ):
-    db_weatherrecord = CRUDWeatherRecord.get_by_weather_station_id_and_date(db=db, weather_station_id=weather_station_id, date=date)
-    if db_weatherrecord is None:
-        raise HTTPException(status_code=404, detail="WeatherRecord não encontrado")
-    return CRUDWeatherRecord.delete(db=db, db_item=db_weatherrecord)
+    # db_weatherrecord = CRUDWeatherRecord.get_by_weather_station_id_and_date(db=db, weather_station_id=weather_station_id, date=date)
+    # if db_weatherrecord is None:
+    #     raise HTTPException(status_code=404, detail="WeatherRecord não encontrado")
+    # return CRUDWeatherRecord.delete(db=db, db_item=db_weatherrecord)
+    return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not logged in")
+
