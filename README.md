@@ -5,7 +5,7 @@
 + [Live Demo](#demo)
 
 ## About <a name = "about"></a>
-Backend implementation of a meteorological mini-stations for the VII Integrated Laboratory course at the Federal University of Bahia.
+Backend implementation of a meteorological mini-stations project for the VII Integrated Laboratory course at the Federal University of Bahia.
 
 Implemented in FastAPI
 
